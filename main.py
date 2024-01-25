@@ -49,8 +49,8 @@ def toggle_proxy_status(con):
 # 创建系统托盘图标
 def create_tray_icon(icon_path):
     image = Image.open(icon_path)
-    menu = (Menu(MenuItem('Switch Icon', toggle_proxy_status),
-                 MenuItem('Exit', on_exit), ))
+    menu = (Menu(MenuItem('切换代理', toggle_proxy_status),
+                 MenuItem('退出', on_exit), ))
     icon = Icon("proxy_icon", image, menu=menu)
     return icon
 
