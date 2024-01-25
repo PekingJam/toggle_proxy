@@ -1,6 +1,7 @@
 from pystray import *
 from PIL import Image
 import winreg
+import webbrowser
 
 # 图标路径
 blue_icon_path = "blue.png"
@@ -49,10 +50,14 @@ def toggle_proxy_status(con):
 # 创建系统托盘图标
 def create_tray_icon(icon_path):
     image = Image.open(icon_path)
-    menu = (Menu(MenuItem('切换代理', toggle_proxy_status),
+    menu = (Menu(MenuItem('网页面板', webui), MenuItem('切换代理', toggle_proxy_status),
                  MenuItem('退出', on_exit), ))
-    icon = Icon("proxy_icon", image, menu=menu)
+    icon = Icon("proxy_icon", image, "右键打开菜单项", menu=menu)
     return icon
+
+
+def webui():
+    webbrowser.open("http://127.0.0.1:9090/ui/#/proxies")
 
 
 # 退出程序
