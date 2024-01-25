@@ -22,7 +22,7 @@ def get_proxy_status():
 
 
 # 切换代理状态
-def toggle_proxy_status(con):
+def toggle_proxy_status():
     try:
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Internet Settings",
                              0, winreg.KEY_SET_VALUE)
@@ -31,17 +31,17 @@ def toggle_proxy_status(con):
         winreg.SetValueEx(key, "ProxyEnable", 0, winreg.REG_DWORD, int(new_status))
         winreg.CloseKey(key)
         if new_status is not None:
-            print(new_status)
-            msg = '系统代理已开启' if new_status else "系统代理已关闭"
-            con.notify(msg)
             if new_status:
                 path = blue_icon_path
+                icon.notify("  开启系统代理成功✅", " ")
             else:
                 path = white_icon_path
+                icon.notify("  关闭系统代理成功✅", " ")
             print(path)
             new_image = Image.open(path)  # 替换为另一个图标的路径
-            con.icon = new_image
-            con.update_menu()
+            icon.icon = new_image
+            icon.update_menu()
+            icon.title = title_name()
     except Exception as e:
         print(f"Error toggling proxy status: {e}")
         return None
@@ -52,8 +52,15 @@ def create_tray_icon(icon_path):
     image = Image.open(icon_path)
     menu = (Menu(MenuItem('网页面板', webui), MenuItem('切换代理', toggle_proxy_status),
                  MenuItem('退出', on_exit), ))
-    icon = Icon("proxy_icon", image, "右键打开菜单项", menu=menu)
+    icon = Icon("proxy_icon", image, title_name(), menu=menu)
     return icon
+
+
+def title_name():
+    if get_proxy_status():
+        return "系统代理已开启"
+    else:
+        return "系统代理已关闭"
 
 
 def webui():
